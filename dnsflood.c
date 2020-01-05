@@ -260,7 +260,7 @@ int main(int argc, char **argv)
 	double difft = 0;
 	time_t start_t, end_t;
 	struct sigaction action;
-	int sleep_interval = 0;	/* interval (in millisecond) between two packets */
+	int sleep_interval = 0;	/* interval (in microseconds) between two packets */
 
 	int random_ip = 0;
 	int static_ip = 0;
@@ -310,7 +310,7 @@ int main(int argc, char **argv)
 			break;
 
 		case 'i':
-			sleep_interval = atoi(optarg) * 1000;
+			sleep_interval = atoi(optarg);
 			break;
 
 		case 'n':

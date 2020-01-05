@@ -29,7 +29,7 @@ Usage:
 	-s, --source-ip		source ip  
 	-p, --dest-port		destination port  
 	-P, --src-port		source port  
-	-i, --interval		interval (in millisecond) between two packets  
+	-i, --interval		interval (in microseconds) between two packets  
 	-n, --number		number of DNS requests to send   
 	-d, --duration          run for at most this many seconds   
 	-r, --random		fake random source IP  
