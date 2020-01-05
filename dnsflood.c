@@ -198,12 +198,20 @@ int make_question_packet(char *data, char *name, int type)
 		*((u_short *) (data + strlen(data) + 1)) = htons(TYPE_A);
 	}
 /* for other type querry
+*/
+	if(type == TYPE_MX){
+		nameformat(name,data);
+  	*( (u_short *) (data+strlen(data)+1) ) = htons(TYPE_MX);
+	}
 	if(type == TYPE_PTR){
 		nameformatIP(name,data);
   	*( (u_short *) (data+strlen(data)+1) ) = htons(TYPE_PTR);
 	}
+	if(type == TYPE_AAAA){
+		nameformat(name,data);
+  	*( (u_short *) (data+strlen(data)+1) ) = htons(TYPE_AAAA);
+	}
        
-*/
 
 	*((u_short *) (data + strlen(data) + 3)) = htons(CLASS_INET);
 
@@ -214,9 +222,22 @@ int read_ip_from_file(char *filename)
 {
 }
 
+void gen_random(char *s, const int len) {
+    static const char alphanum[] =
+        "0123456789"
+        "abcdefghijklmnopqrstuvwxyz";
+
+    for (int i = 0; i < len; ++i) {
+        s[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+
+    s[len] = 0;
+}
+
 int main(int argc, char **argv)
 {
 	char qname[256] = {0};	/* question name */
+	char r[256] = {0};
 	uint16_t qtype = TYPE_A;
 	struct in_addr src_ip = {0};	/* source address          */
 	struct sockaddr_in sin_dst = {0};	/* destination sock address*/
@@ -382,7 +403,7 @@ int main(int argc, char **argv)
 	iphdr->ip_dst.s_addr = sin_dst.sin_addr.s_addr;
 	iphdr->ip_v = IPVERSION;
 	iphdr->ip_hl = sizeof(struct ip) >> 2;
-	iphdr->ip_ttl = 245;
+	//iphdr->ip_ttl = 245;
 	iphdr->ip_p = IPPROTO_UDP;
 
 	while (1) {
@@ -397,18 +418,26 @@ int main(int argc, char **argv)
 		}
 
 		dns_header->id = random();
-		dns_datalen = make_question_packet(dns_data, qname, TYPE_A);
+		gen_random(r, random() % 127);
+		//printf("b: %s\n", qname);
+		strcat(r, ".");
+		strcat(r, qname);
+		//printf("a: %s\n", r);
+		dns_datalen = make_question_packet(dns_data, r, qtype);
+		//dns_datalen = make_question_packet(dns_data, qname, qtype);
+		//dns_datalen = make_question_packet(dns_data, qname, TYPE_MX);
 
 		udp_datalen = sizeof(struct dnshdr) + dns_datalen;
 		ip_datalen = sizeof(struct udphdr) + udp_datalen;
 
 		/* update UDP header*/
 		if (!src_port) {
-			udp->uh_sport = htons(random() % 65535);
+			udp->uh_sport = htons(1 + random() % 65534);
 		}
 		udp->uh_ulen = htons(sizeof(struct udphdr) + udp_datalen);
 		udp->uh_sum = 0;
 
+		iphdr->ip_ttl = 10 + random() % 235;
 		/* update IP header */
 		iphdr->ip_src.s_addr = src_ip.s_addr;
 		iphdr->ip_id = random() % 5985;

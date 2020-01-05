@@ -1,9 +1,13 @@
-# dns-flood
-Original DNS-Flood tool found on code.google.com
+# dns-flood-ng
 
-Use raw sockets to generate DNS flood attack.
+This is modified version od DNS-Flood tool. 
 
-Original Here: https://code.google.com/p/dns-flood/
+In contrast to original tool it provides:
+  - subdomain part of query randomization aka DNS Water Torture
+  - source port and TTL randomization
+  - additional query types like AAAA and MX
+
+The tool is able to bypass Radware DefensePro SW version prior to 8.x.
 
 ## How to install
 
@@ -13,6 +17,7 @@ Original Here: https://code.google.com/p/dns-flood/
  
 ## How to run
 
+```
 Usage: ./dnsflood <query_name> <destination_ip> [options]  
 	Options:  
 	-t, --type		query type  
@@ -24,3 +29,12 @@ Usage: ./dnsflood <query_name> <destination_ip> [options]
 	-r, --random		fake random source IP  
 	-D, --daemon		run as daemon  
 	-h, --help  
+```
+
+## Credits for original version
+
+Original DNS-Flood tool found on code.google.com
+
+Use raw sockets to generate DNS flood attack.
+
+Original Here: https://code.google.com/p/dns-flood/
