@@ -10,6 +10,7 @@ In contrast to original tool it provides:
   - subdomain part of query randomization aka DNS Water Torture
   - source port and TTL randomization
   - additional query types like AAAA and MX
+  - DNSSEC query support
 
 The tool is able to bypass Radware DefensePro SW version prior to 8.x.
 
@@ -31,8 +32,9 @@ Usage:
 	-P, --src-port		source port  
 	-i, --interval		interval (in microseconds) between two packets  
 	-n, --number		number of DNS requests to send   
-	-d, --duration          run for at most this many seconds   
+	-d, --duration      run for at most this many seconds   
 	-r, --random		fake random source IP  
+	-S, --dnssec        make a dnssec query
 	-D, --daemon		run as daemon  
 	-h, --help          print this message   
 ```

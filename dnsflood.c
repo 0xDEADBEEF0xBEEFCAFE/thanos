@@ -85,6 +85,8 @@ struct dnshdr {
 	unsigned short int num_rrsup;
 };
 
+#define OPT_TYPE 41
+
 uint16_t get_type(const char *type)
 {
 	int i;
@@ -136,11 +138,12 @@ void usage(char *progname)
 			"\t-s, --source-ip\t\tsource ip\n"
 			"\t-p, --dest-port\t\tdestination port\n"
 			"\t-P, --src-port\t\tsource port\n"
-			"\t-i, --interval\t\tinterval (in millisecond) between two packets\n"
+			"\t-i, --interval\t\tinterval (in microsecond) between two packets\n"
 			"\t-n, --number\t\tnumber of DNS requests to send\n"
 			"\t-d, --duration\t\trun for at most this many seconds\n"
 			"\t-r, --random\t\tfake random source IP\n"
 			"\t-D, --daemon\t\trun as daemon\n"
+			"\t-S, --dnssec\t\tenable dnssec\n"
 			"\t-h, --help\n"
 			"\n"
 			, progname);
@@ -221,6 +224,17 @@ int make_question_packet(char *data, char *name, int type)
 	return (strlen(data) + 5);
 }
 
+int make_dnssec_packet(struct dnshdr *dns_header, char *opt_data)
+{
+	dns_header->num_rrsup = htons(1);
+	*opt_data = 0; /* Name = <Root> */
+	*( (u_short *) (opt_data+1) ) = htons(OPT_TYPE); /* RR Type = OPT(41) */
+	*( (u_short *) (opt_data+3) ) = htons(4096); /* UDP Payload Size = 4096 */
+	*( (u_long *)(opt_data+5) ) = htonl(0x8000); /* Z = 0x8000 (DO = 1) */
+	*( (u_short *)(opt_data+9) ) = htons(0); /* Data len = 0 */
+	return 11;
+}
+
 int read_ip_from_file(char *filename)
 {
 }
@@ -261,13 +275,14 @@ int main(int argc, char **argv)
 	time_t start_t, end_t;
 	struct sigaction action;
 	int sleep_interval = 0;	/* interval (in microseconds) between two packets */
+	int dnssec = 0;
 
 	int random_ip = 0;
 	int static_ip = 0;
 
 	int arg_options;
 
-	const char *short_options = "f:t:p:P:Drs:i:n:d:h";
+	const char *short_options = "f:t:p:P:DrSs:i:n:d:h";
 
 	const struct option long_options[] = {
 		{"type", required_argument, NULL, 't'},
@@ -276,6 +291,7 @@ int main(int argc, char **argv)
 		{"src-port", required_argument, NULL, 'P'},
 		{"daemon", no_argument, NULL, 'D'},
 		{"random", no_argument, NULL, 'r'},
+		{"dnssec", no_argument, NULL, 'S'},
 		{"source-ip", required_argument, NULL, 's'},
 		{"interval", required_argument, NULL, 'i'},
 		{"number", required_argument, NULL, 'n'},
@@ -328,6 +344,10 @@ int main(int argc, char **argv)
 
 		case 'D':
 			//TODO
+			break;
+
+		case 'S':
+			dnssec = 1;
 			break;
 
 		case 'f':
@@ -454,6 +474,11 @@ int main(int argc, char **argv)
 		dns_datalen = make_question_packet(dns_data, r, qtype);
 		//dns_datalen = make_question_packet(dns_data, qname, qtype);
 		//dns_datalen = make_question_packet(dns_data, qname, TYPE_MX);
+
+		if (dnssec) {
+			char* opt_data = (char *)dns_data + dns_datalen;
+			dns_datalen += make_dnssec_packet(dns_header, opt_data);
+		}
 
 		udp_datalen = sizeof(struct dnshdr) + dns_datalen;
 		ip_datalen = sizeof(struct udphdr) + udp_datalen;
