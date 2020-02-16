@@ -1,9 +1,10 @@
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
+ #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -159,7 +160,7 @@ void nameformat(char *name, char *QS)
 	strcpy(bungle, name);
 	x = strtok(bungle, ".");
 	while (x != NULL) {
-		if (snprintf(elem, 128, "%c%s", strlen(x), x) == 128) {
+		if (snprintf(elem, 128, "%c%s", (int)strlen(x), x) == 128) {
 			puts("String overflow.");
 			exit(1);
 		}
