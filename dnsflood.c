@@ -73,7 +73,7 @@ struct dnshdr {
 
 	unsigned char rd:1;			/* recursion desired */
 	unsigned char tc:1;			/* truncated message */
-	unsigned char aa:1;			/* authoritive answer */
+	unsigned char aa:1;			/* authoritative answer */
 	unsigned char opcode:4;		/* purpose of message */
 	unsigned char qr:1;			/* response flag */
 
@@ -189,12 +189,12 @@ void usage(char *progname)
 /*
  * Return a valid random label string
  */
-char *randomLabel(size_t len, char *rLabel)
+char *random_label(size_t len, char *r_label)
 {
-	const static char validChars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-";
-	size_t charsetLen = sizeof validChars - 1;
-	size_t letterLen = sizeof validChars - 12;
-	size_t letdigLen = sizeof validChars - 2;
+	const static char valid_chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-";
+	size_t charset_len = sizeof valid_chars - 1;
+	size_t letter_len = sizeof valid_chars - 12;
+	size_t letdig_len = sizeof valid_chars - 2;
 	size_t n;
 
 #ifdef DEBUG
@@ -204,28 +204,28 @@ char *randomLabel(size_t len, char *rLabel)
 	}
 #endif
 
-	if (rLabel) {
+	if (r_label) {
 		// They must start with a letter.
-		rLabel[0] = validChars[random() % letterLen];
+		r_label[0] = valid_chars[random() % letter_len];
 		// and have as interior characters only letters, digits, and hyphen.
 		for (n = 1; n < (len - 1); n++) {
-			rLabel[n] = validChars[random() % charsetLen];
+			r_label[n] = valid_chars[random() % charset_len];
 		}
 		// end with a letter or digit
 		if (n < len)
-			rLabel[n] = validChars[random() % letdigLen];
+			r_label[n] = valid_chars[random() % letdig_len];
 
-		rLabel[len] = '\0';
+		r_label[len] = '\0';
 
 #ifdef DEBUG
-		printf("Label: %02d %s\n", (int)strlen(rLabel), rLabel);
+		printf("Label: %02d %s\n", (int)strlen(r_label), r_label);
 #endif
 
 	}
-	return rLabel;
+	return r_label;
 }
 
-void randomName(int len, int label_cnt, char *rName)
+void random_name(int len, int label_cnt, char *r_name)
 {
 	int i;
 
@@ -235,23 +235,23 @@ void randomName(int len, int label_cnt, char *rName)
 #endif
 	for (i = 0; i < label_cnt && len > 1; i++) {
 		if (len > 63)
-			randomLabel((random() % 63) + 1, rName);
+			random_label((random() % 63) + 1, r_name);
 		else
-			randomLabel((random() % len) + 1, rName);
-		strcat(rName, ".");
-		len -= strlen(rName);
-		rName += strlen(rName);
+			random_label((random() % len) + 1, r_name);
+		strcat(r_name, ".");
+		len -= strlen(r_name);
+		r_name += strlen(r_name);
 	}
 }
 
-void randomAddr(char *addr)
+void random_addr(char *addr)
 {
-	uint32_t rAddr = random();
+	uint32_t r_addr = random();
 
-	addr += snprintf(addr, 5, "%d.", (int)((rAddr >> 24 & 0xFD) + 1));
-	addr += snprintf(addr, 5, "%d.", (int)(rAddr >> 16 & 0xFF));
-	addr += snprintf(addr, 5, "%d.", (int)(rAddr >> 8 & 0xFF));
-	snprintf(addr, 4, "%d", (int)((rAddr & 0xFD) + 1));
+	addr += snprintf(addr, 5, "%d.", (int)((r_addr >> 24 & 0xFD) + 1));
+	addr += snprintf(addr, 5, "%d.", (int)(r_addr >> 16 & 0xFF));
+	addr += snprintf(addr, 5, "%d.", (int)(r_addr >> 8 & 0xFF));
+	snprintf(addr, 4, "%d", (int)((r_addr & 0xFD) + 1));
 }
 
 void nameformat(char *name, char *target)
@@ -260,26 +260,26 @@ void nameformat(char *name, char *target)
 	char fullname[255];
 	char *bungle = fullname;
 	char *x = NULL;
-	int cpLen;
+	int cp_len;
 
 	*target = 0;
 	strcpy(bungle, name);
 	x = strtok(bungle, ".");
 	while (x != NULL) {
-		cpLen = snprintf(target, 65, "%c%s", (int)strlen(x), x);
-		if (cpLen >= 65) {
+		cp_len = snprintf(target, 65, "%c%s", (int)strlen(x), x);
+		if (cp_len >= 65) {
 			puts("String overflow.");
 #ifdef DEBUG
-			printf("cpLen: %d, Len: %d, inStr: %s, cpStr: %s\n", cpLen, (int)strlen(x), x, target);
+			printf("cpLen: %d, Len: %d, inStr: %s, cpStr: %s\n", cp_len, (int)strlen(x), x, target);
 #endif
 			exit(1);
 		}
-		target += cpLen;
+		target += cp_len;
 		x = strtok(NULL, ".");
 	}
 }
 
-void nameformatIP(char *ip, char *target)
+void nameformat_ip(char *ip, char *target)
 {
 	char *comps[8];
 	char fullptr[32];
@@ -321,7 +321,7 @@ void nameformatIP(char *ip, char *target)
 int make_question_packet(char *data, char *name, int type)
 {
 	if(type == TYPE_PTR)
-		nameformatIP(name, data);
+		nameformat_ip(name, data);
 	else
 		nameformat(name, data);
 
@@ -595,9 +595,9 @@ int main(int argc, char **argv)
 		dns_header->id = random();
 		if (random_sub) {
 			if (qtype == TYPE_PTR)
-				randomAddr(r);
+				random_addr(r);
 			else
-				randomName(255 - strlen(qname), 0, r);
+				random_name(255 - strlen(qname), 0, r);
 			//printf("b: %s\n", qname);
 			strcat(r, ".");
 			strcat(r, qname);
