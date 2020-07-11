@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <arpa/inet.h>
+ #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -314,7 +314,7 @@ void nameformat_ip(char *ip, char *target)
 			printf("cpLen: %d, Len: %d, inStr: %s, cpStr: %s\n", cpLen, (int)strlen(comps[px]), comps[px], target);
 #endif
 			exit(1);
-		}
+	}
 		target += cpLen;
 	}
 
@@ -328,7 +328,7 @@ int make_question_packet(char *data, char *name, int type)
 		nameformat_ip(name, data);
 	else
 		nameformat(name, data);
-
+       
 	*((u_short *) (data + strlen(data) + 1)) = htons(type);
 
 	*((u_short *) (data + strlen(data) + 3)) = htons(CLASS_INET);
@@ -363,7 +363,7 @@ void urandom_init() {
 			mySeed = 0x4a6f6273;
 	} else {
 		mySeed = 0x4a6f6273;
-	}
+    }
 	srandom((unsigned long) time(NULL) * getpid() + mySeed);
 }
 
@@ -371,8 +371,8 @@ void urandom_init() {
 static int stop = 0;
 
 void term(int signum) {
-	printf("Stopping.. \n");
-	stop = 1;
+    printf("Stopping.. \n");
+    stop = 1;
 }
 
 int main(int argc, char **argv)
@@ -384,7 +384,7 @@ int main(int argc, char **argv)
 	struct sockaddr_in sin_dst = {0};	/* destination sock address*/
 	u_short src_port = 0;			/* source port             */
 	u_short dst_port = 53;			/* destination port        */
-	int sock;					/* socket to write on      */
+	int sock;				/* socket to write on      */
 	int number = 0;
 	int duration = 0;
 	int count = 0;
@@ -439,73 +439,73 @@ int main(int argc, char **argv)
 
 		switch (arg_options) {
 
-			case 'p':
-				dst_port = atoi(optarg);
-				break;
+		case 'p':
+			dst_port = atoi(optarg);
+			break;
 
-			case 'P':
+		case 'P':
 				src_opt = atoi(optarg);
 				if (src_opt >= 0)
 					src_port = src_opt;
 				else if (src_opt < -1)
 					src_opt = -2;
-				break;
+			break;
 
-			case 'i':
-				sleep_interval = atoi(optarg);
-				break;
+		case 'i':
+			sleep_interval = atoi(optarg);
+			break;
 
-			case 'n':
-				number = atoi(optarg);
-				break;
+		case 'n':
+			number = atoi(optarg);
+			break;
 
-			case 'd':
-				duration = atoi(optarg);
-				break;
-
-			case 'r':
-				random_ip = 1;
-				srandom((unsigned long)time(NULL));
+		case 'd':
+			duration = atoi(optarg);
+			break;
+	
+		case 'r':
+			random_ip = 1;
+			srandom((unsigned long)time(NULL));
 				break;
 
 			case 'R':
 				random_sub = 1;
-				break;
+			break;
 
-			case 'D':
-				//TODO
-				break;
+		case 'D':
+			//TODO
+			break;
 
-			case 'S':
-				dnssec = 1;
-				break;
+		case 'S':
+			dnssec = 1;
+			break;
 
-			case 'f':
-				if (read_ip_from_file(optarg)) {
-				}
-				break;
+		case 'f':
+			if (read_ip_from_file(optarg)) {
+			}
+			break;
 
-			case 's':
+		case 's':
 				//static_ip = 1;
-				inet_pton(AF_INET, optarg, &src_ip);
-				break;
+			inet_pton(AF_INET, optarg, &src_ip);
+			break;
 
-			case 't':
-				qtype = get_type(optarg);
-				if (qtype == 0) {
-					printf("bad query type\n");
-					quit = 1;
-				}
-				break;
+		case 't':
+			qtype = get_type(optarg);
+			if (qtype == 0) {
+				printf("bad query type\n");
+				quit = 1;
+			}
+			break;
 
-			case 'h':
-				usage(argv[0]);
-				return 0;
-				break;
+		case 'h':
+			usage(argv[0]);
+			return 0;
+			break;
 
-			default:
-				printf("CMD line Options Error\n\n");
-				break;
+		default:
+			printf("CMD line Options Error\n\n");
+			break;
 		}
 	}
 
@@ -543,7 +543,7 @@ int main(int argc, char **argv)
 	}
 
 	if ((setsockopt(sock, IPPROTO_IP, IP_HDRINCL, (char *) &on, sizeof(on)))
-			== -1) {
+		== -1) {
 		perror("setsockopt");
 		exit(-1);
 	}
@@ -578,9 +578,9 @@ int main(int argc, char **argv)
 
 	/* Set signal handler */
 	memset(&action, 0, sizeof(struct sigaction));
-	action.sa_handler = term;
-	sigaction(SIGTERM, &action, NULL);
-	sigaction(SIGINT, &action, NULL);
+        action.sa_handler = term;
+        sigaction(SIGTERM, &action, NULL);
+        sigaction(SIGINT, &action, NULL);
 
 	time(&start_t);
 	time(&end_t);
@@ -602,11 +602,11 @@ int main(int argc, char **argv)
 				random_addr(r);
 			else
 				random_name(255 - strlen(qname), 0, r);
-			//printf("b: %s\n", qname);
-			strcat(r, ".");
-			strcat(r, qname);
-			//printf("a: %s\n", r);
-			dns_datalen = make_question_packet(dns_data, r, qtype);
+		//printf("b: %s\n", qname);
+		strcat(r, ".");
+		strcat(r, qname);
+		//printf("a: %s\n", r);
+		dns_datalen = make_question_packet(dns_data, r, qtype);
 		} else {
 			dns_datalen = make_question_packet(dns_data, qname, qtype);
 		}
@@ -653,13 +653,13 @@ int main(int argc, char **argv)
 		count++;
 		time(&end_t);
 		difft = difftime(end_t, start_t);
-
+		
 		// Check if no count reach
 		if (number > 0 && count >= number) {
 			// done
 			break;
 		}
-
+		
 		// Check if duration count reached
 		if (duration > 0 && difft >= duration) {
 			// done 
