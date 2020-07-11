@@ -32,11 +32,12 @@ Usage:
 	-P, --src-port		source port  
 	-i, --interval		interval (in microseconds) between two packets  
 	-n, --number		number of DNS requests to send   
-	-d, --duration      run for at most this many seconds   
-	-r, --random		fake random source IP  
-	-S, --dnssec        make a dnssec query
+	-d, --duration		run for at most this many seconds   
+	-r, --random-src	fake random source IP
+	-R, --random-sub	prefix with random subdomain names
+	-S, --dnssec		make a dnssec query
 	-D, --daemon		run as daemon  
-	-h, --help          print this message   
+	-h, --help			print this message   
 ```
 Example:
 ```bash

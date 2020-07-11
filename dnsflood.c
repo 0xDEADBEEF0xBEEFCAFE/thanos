@@ -142,7 +142,8 @@ void usage(char *progname)
 			"\t-i, --interval\t\tinterval (in microsecond) between two packets\n"
 			"\t-n, --number\t\tnumber of DNS requests to send\n"
 			"\t-d, --duration\t\trun for at most this many seconds\n"
-			"\t-r, --random\t\tfake random source IP\n"
+			"\t-r, --random-src\t\tfake random source IP\n"
+			"\t-R, --random-sub\t\tprefix with random subdomain names\n"
 			"\t-D, --daemon\t\trun as daemon\n"
 			"\t-S, --dnssec\t\tenable dnssec\n"
 			"\t-h, --help\n"
@@ -279,11 +280,12 @@ int main(int argc, char **argv)
 	int dnssec = 0;
 
 	int random_ip = 0;
+	int random_sub = 0;
 	int static_ip = 0;
 
 	int arg_options;
 
-	const char *short_options = "f:t:p:P:DrSs:i:n:d:h";
+	const char *short_options = "f:t:p:P:DrRSs:i:n:d:h";
 
 	const struct option long_options[] = {
 		{"type", required_argument, NULL, 't'},
@@ -291,7 +293,8 @@ int main(int argc, char **argv)
 		{"file", required_argument, NULL, 'f'},
 		{"src-port", required_argument, NULL, 'P'},
 		{"daemon", no_argument, NULL, 'D'},
-		{"random", no_argument, NULL, 'r'},
+		{"random-src", no_argument, NULL, 'r'},
+		{"random-sub", no_argument, NULL, 'R'},
 		{"dnssec", no_argument, NULL, 'S'},
 		{"source-ip", required_argument, NULL, 's'},
 		{"interval", required_argument, NULL, 'i'},
@@ -341,6 +344,10 @@ int main(int argc, char **argv)
 		case 'r':
 			random_ip = 1;
 			srandom((unsigned long)time(NULL));
+			break;
+
+		case 'R':
+			random_sub = 1;
 			break;
 
 		case 'D':
@@ -467,14 +474,16 @@ int main(int argc, char **argv)
 		}
 
 		dns_header->id = random();
-		gen_random(r, random() % 127);
-		//printf("b: %s\n", qname);
-		strcat(r, ".");
-		strcat(r, qname);
-		//printf("a: %s\n", r);
-		dns_datalen = make_question_packet(dns_data, r, qtype);
-		//dns_datalen = make_question_packet(dns_data, qname, qtype);
-		//dns_datalen = make_question_packet(dns_data, qname, TYPE_MX);
+		if (random_sub) {
+			gen_random(r, random() % 127);
+			//printf("b: %s\n", qname);
+			strcat(r, ".");
+			strcat(r, qname);
+			//printf("a: %s\n", r);
+			dns_datalen = make_question_packet(dns_data, r, qtype);
+		} else {
+			dns_datalen = make_question_packet(dns_data, qname, qtype);
+		}
 
 		if (dnssec) {
 			char* opt_data = (char *)dns_data + dns_datalen;
