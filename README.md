@@ -7,9 +7,14 @@ Use raw sockets to generate DNS flood attack.
 Original Here: https://code.google.com/p/dns-flood/
 
 In contrast to original tool it provides:
-  - subdomain part of query randomization aka DNS Water Torture
-  - source port and TTL randomization
-  - additional query types like AAAA and MX
+  - Change to use /dev/urandom as the random seed
+  - Make the Query comply with RFC 1035
+  - Subdomain part of query randomization aka DNS Water Torture
+  - Change default ephemeral port range comply with RFC 6056;  
+  - Add feature to select ephemeral port range between 0 - 65535 or 1024 - 65535;  
+  - Add feature to specific source port number, include port 0
+  - Source port and TTL randomization
+  - Additional query types like AAAA and MX
   - DNSSEC query support
 
 The tool is able to bypass Radware DefensePro SW version prior to 8.x.
@@ -31,13 +36,13 @@ Usage:
 	-p, --dest-port		destination port  
 	-P, --src-port		source port  
 	-i, --interval		interval (in microseconds) between two packets  
-	-n, --number		number of DNS requests to send   
+	-n, --number		number of DNS requests to send  
 	-d, --duration		run for at most this many seconds   
 	-r, --random-src	fake random source IP
 	-R, --random-sub	prefix with random subdomain names
 	-S, --dnssec		make a dnssec query
 	-D, --daemon		run as daemon  
-	-h, --help			print this message   
+	-h, --help		print this message   
 ```
 Example:
 ```bash
