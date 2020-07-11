@@ -225,17 +225,21 @@ char *random_label(size_t len, char *r_label)
 	return r_label;
 }
 
+#define MAX_LABEL_LEN 10
+#define MAX_LABEL_COUNT 2
+
 void random_name(int len, int label_cnt, char *r_name)
 {
 	int i;
 
 	label_cnt += (random() % (len / 64 + 1)) + 1;
+	label_cnt %= MAX_LABEL_COUNT + 1;
 #ifdef DEBUG
 	printf("LabelCnt: %d\n", label_cnt);
 #endif
 	for (i = 0; i < label_cnt && len > 1; i++) {
-		if (len > 63)
-			random_label((random() % 63) + 1, r_name);
+		if (len > MAX_LABEL_LEN)
+			random_label((random() % MAX_LABEL_LEN) + 1, r_name);
 		else
 			random_label((random() % len) + 1, r_name);
 		strcat(r_name, ".");
