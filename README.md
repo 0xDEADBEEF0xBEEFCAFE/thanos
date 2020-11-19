@@ -31,7 +31,11 @@ Usage:
 ```
 Example:
 ```bash
+sudo ./thanos_darwin maxng.net 1.1.1.1 -t ANY -d 1
+sent 152648 DNS requests in 1.000000 sec.
 
+sudo ./thanos_darwin maxng.net 1.1.1.1 -t ANY -n 30
+sent 30 DNS requests in 0.000000 sec.
 ```
 
 ## Credits for original version
