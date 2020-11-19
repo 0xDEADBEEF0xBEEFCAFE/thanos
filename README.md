@@ -38,6 +38,11 @@ sudo ./thanos_darwin maxng.net 1.1.1.1 -t ANY -n 30
 sent 30 DNS requests in 0.000000 sec.
 ```
 
+# How to Use
+1. Download C file or clone
+2. Compile using clang or gcc (code has been compiled using both clang and gcc for linux and OSX and works fine)
+3. Use with care
+
 ## Credits for original version
 
 Original DNS-Flood tool found on code.google.com
