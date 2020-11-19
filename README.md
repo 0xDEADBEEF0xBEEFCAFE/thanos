@@ -1,30 +1,14 @@
 # dns-flood
-Original DNS-Flood tool found on code.google.com
+This is a fork of https://github.com/hawell/dns-flood/blob/master/dnsflood.c 
 
-This is modified version od DNS-Flood tool. 
+This is a modified version of DNS-Flood tool codename Thanos. The code should not be used in the wild for DOS but for education, lab testing and verification purposes only.
 Use raw sockets to generate DNS flood attack.
 
-Original Here: https://code.google.com/p/dns-flood/
-
 In contrast to original tool it provides:
-  - Change to use /dev/urandom as the random seed
-  - Make the Query comply with RFC 1035
-  - Subdomain part of query randomization aka DNS Water Torture
-  - Change default ephemeral port range comply with RFC 6056;  
-  - Add feature to select ephemeral port range between 0 - 65535 or 1024 - 65535;  
-  - Add feature to specific source port number, include port 0
-  - Source port and TTL randomization
-  - Additional query types like AAAA and MX
-  - DNSSEC query support
+ Support additional query Type ANY
 
-The tool is able to bypass Radware DefensePro SW version prior to 8.x.
 
-## How to install
 
-1. Clone Repo
-2. Run Make
-3. Enjoy Kittens
- 
 ## How to run
 
 Usage:
@@ -46,12 +30,7 @@ Usage:
 ```
 Example:
 ```bash
-$ ./dnsflood abf.auction.co.kr 127.0.0.1 -d 30
-sent 5333186 DNS requests in 30.000000 sec.
-$
-$ ./dnsflood abf.auction.co.kr 10.40.196.84 -n 5000000
-sent 5000000 DNS requests in 28.000000 sec.
-$
+
 ```
 
 ## Credits for original version
