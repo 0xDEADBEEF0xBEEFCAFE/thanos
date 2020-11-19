@@ -37,6 +37,6 @@ Example:
 
 Original DNS-Flood tool found on code.google.com
 
-Use raw sockets to generate DNS flood attack.
+Use raw sockets to generate DNS flood.
 
 Original Here: https://code.google.com/p/dns-flood/
