@@ -39,6 +39,7 @@ enum dns_type {
 	TYPE_MX,		//15 
 	TYPE_TXT,		//16
 	TYPE_AAAA = 0x1c,
+	TYPE_ANY = 0xff,
 };
 
 typedef struct type_name{
@@ -63,7 +64,8 @@ type_name_t dns_type_names [] = {
 	{TYPE_MINFO, "MINFO"},		
 	{TYPE_MX, "MX"},			
 	{TYPE_TXT, "TXT"},			
-	{TYPE_AAAA, "AAAA"},		
+	{TYPE_AAAA, "AAAA"},	
+	{TYPE_ANY, "ANY"},
 };
 
 #define DNS_TYPE_NUM (sizeof(dns_type_names) / sizeof(type_name_t))
