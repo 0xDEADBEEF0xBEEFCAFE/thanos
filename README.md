@@ -1,10 +1,10 @@
 # dns-flood
 This is a fork of https://github.com/hawell/dns-flood/blob/master/dnsflood.c 
 
-This is a modified version of DNS-Flood tool codename Thanos. The code should not be used in the wild for DOS but for education, lab testing and verification purposes only.
+This is a modified version of DNS-Flood tool codename Thanos. The code should not be used in the wild for DOS but for educational, lab testing and verification purposes only.
 Use raw sockets to generate DNS flood attack.
 
-In contrast to original tool it provides:
+In contrast to fork version it provides:
  Support additional query Type ANY
 
 
