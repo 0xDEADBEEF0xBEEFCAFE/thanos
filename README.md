@@ -51,3 +51,6 @@ Original DNS-Flood tool found on code.google.com
 Use raw sockets to generate DNS flood.
 
 Original Here: https://code.google.com/p/dns-flood/
+
+## Disclaimer
+The forked code enhancement was solely developed in my personal capacity and has no associations with my employers past or present.
