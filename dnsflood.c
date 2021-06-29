@@ -38,6 +38,8 @@ enum dns_type {
 	TYPE_MINFO,		//14
 	TYPE_MX,		//15 
 	TYPE_TXT,		//16
+	TYPE_RRSIG = 0x2e,  //46
+	TYPE_DNSKEY = 0x30, //48
 	TYPE_AAAA = 0x1c,
 	TYPE_ANY = 0xff,
 };
@@ -63,7 +65,9 @@ type_name_t dns_type_names [] = {
 	{TYPE_HINFO, "HINFO"},		
 	{TYPE_MINFO, "MINFO"},		
 	{TYPE_MX, "MX"},			
-	{TYPE_TXT, "TXT"},			
+	{TYPE_TXT, "TXT"},
+	{TYPE_RRSIG, "RRSIG"},	
+	{TYPE_DNSKEY,"DNSKEY"},				
 	{TYPE_AAAA, "AAAA"},	
 	{TYPE_ANY, "ANY"},
 };
