@@ -6,7 +6,7 @@ This is a modified version of DNS-Flood tool codename Thanos. The code should no
 Use raw sockets to generate DNS flood.
 
 In contrast to fork version it provides:
- - Support additional query (RR) Type - ANY, RRSIG, DNSKEY
+ - Support additional query (RR) Type - ANY, RRSIG, DNSKEY, HTTPS SVCB
 
 
 
