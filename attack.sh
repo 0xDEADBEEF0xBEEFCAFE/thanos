@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 if ! command -v bash >/dev/null 2>&1; then
   echo 'this script requires bash.'
@@ -8,7 +8,8 @@ fi
 ARGS=${@}
 
 ctrl_c() {
-  echo -e '\nCaught Ctrl-C. Exiting...'
+  echo
+  echo 'Caught Ctrl-C. Exiting...'
   exit 1
 }
 trap ctrl_c INT
