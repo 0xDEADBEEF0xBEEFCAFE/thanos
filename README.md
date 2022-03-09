@@ -1,4 +1,4 @@
-# dns-flood
+# Thanos
 This is a fork of https://github.com/hawell/dns-flood
 
 This is a modified version of DNS-Flood tool codename Thanos. The code should not be used in the wild for DOS but for educational, lab testing and verification purposes only.
@@ -8,7 +8,18 @@ Use raw sockets to generate DNS flood.
 In contrast to fork version it provides:
  - Support additional query (RR) Type - ANY, RRSIG, DNSKEY, HTTPS, SVCB (HTTPS and SVCB still in IETF drafts but already seen deployment)
 
+## Forked version to install as `thanos`:
 
+```
+git clone https://github.com/0xdeadbeef0xbeefcafe/thanos.git
+cd thanos
+./install.sh
+```
+
+## Forked version to run continuously via script:
+```
+./attack.sh <-t targets_file>
+```
 
 ## How to run
 
